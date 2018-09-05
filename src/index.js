@@ -31,12 +31,29 @@ app.post('/:name', (req, res) => {
 })
 app.get('/tt', (req, res) => {
     console.log('test transaction callback called');
+
+        let walletId = '5b8d9077e444261004b74ae735ea1d9d';
+        let txHash = '7d916e5d4a0c04148f6a4ddfc5312f88fecdcca1d58c033863b71cd0db3ca7d7';
+
+
+            bitgo.coin('tbtc').wallets().get({ id: walletId })
+            .then(function(wallet) {
+              // print the wallet
+              wallet.getTransaction({ txHash: txHash }, function (err, transaction) {
+                res.write(JSON.stringify(transaction, null, 4));
+                });
+              //console.dir(wallet._wallet);
+            });
+            
+
     // Extract the name from the request parameters
-    //getTransaction();
-    res.send('ok');
+    //res.send('ok');
 })
 
 app.listen(port, function () {
     console.log('Example app listening on port ' + port);
 });
+
+
+
 
