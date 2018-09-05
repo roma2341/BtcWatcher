@@ -9,6 +9,7 @@
     "bitgo": "^4.35.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "jslint": "^0.12.0",
     "nodemon": "^1.18.4"
   },
   "scripts": {
