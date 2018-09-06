@@ -30,9 +30,18 @@ app.post('/generate_order',function(req,res){
     });
 })
 
+app.post('/get_orders',function(req,res) {
+    let criteria = req.body;
+    db.UserOrder.findOne({ where: criteria }).then(result => {
+        res.send(res.send(result));
+    });
+})
+
 app.post('/get_payments',function(req,res){
     let criteria = req.body;
-    db.UserPayment.findOne({ where: criteria })
+    db.UserPayment.findOne({ where: criteria }).then(result => {
+        res.send(res.send(result));
+    })
 })
 
 //OTHER
