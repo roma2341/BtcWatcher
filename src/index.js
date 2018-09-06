@@ -19,13 +19,9 @@ app.post('/buy_token_request',function(req,res){
 
 app.post('/add_user',function(req,res){
     let user = req.body;
-    console.log('query:'+sql);
-    con.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("Result: " + result);
-      });
-    res.write('ok');
-
+    db.User.create(user).then(user=>{
+        res.write(JSON.stringify(user)); 
+    });
 })
 
 //OTHER

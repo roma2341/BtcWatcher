@@ -14,7 +14,7 @@ module.exports = {
       orderId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'UserOrder', key: 'id' }
+        references: { model: 'UserOrders', key: 'id' }
       },
       createdAt: {
         allowNull: false,
