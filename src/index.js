@@ -3,25 +3,13 @@ var BitgoConfig = require('./config/bitgo.config');
 var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var mysql = require('mysql');
+var db = require('./models');
 
 console.log('bitgoconfig:'+JSON.stringify(BitgoConfig));
 var app = express();
 var bitgo = new BitGoJS.BitGo({ env: 'test', accessToken: BitgoConfig.ACCESS_TOKEN });
 //init
 app.use(bodyParser.json());
-//MYSQL
-var sequelize = new Sequelize('bitgo', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql',
-  
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    }
-  });
-
 
 //MAPPINGS
 
@@ -31,7 +19,6 @@ app.post('/buy_token_request',function(req,res){
 
 app.post('/add_user',function(req,res){
     let user = req.body;
-    let sql = 'INSERT INTO `user`(id,name) VALUES ("'+user.id+'",'+user.name+');';
     console.log('query:'+sql);
     con.query(sql, function (err, result) {
         if (err) throw err;
