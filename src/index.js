@@ -13,15 +13,26 @@ app.use(bodyParser.json());
 
 //MAPPINGS
 
-app.post('/buy_token_request',function(req,res){
-    
-})
-
 app.post('/add_user',function(req,res){
     let user = req.body;
     db.User.create(user).then(user=>{
-        res.write(JSON.stringify(user)); 
+        res.send(JSON.stringify(user)); 
     });
+})
+
+app.post('/generate_order',function(req,res){
+    let order = {
+        paymentAddress:"2N9iwJFgf1nnSMHAZsJwT8SYofXygwhBHAz",
+        userId:req.body.userId
+    };
+    db.UserOrder.create(order).then(order=>{
+        res.send(JSON.stringify(order)); 
+    });
+})
+
+app.post('/get_payments',function(req,res){
+    let criteria = req.body;
+    db.UserPayment.findOne({ where: criteria })
 })
 
 //OTHER
