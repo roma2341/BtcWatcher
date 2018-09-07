@@ -11,6 +11,9 @@ module.exports = {
       paymentAddress: {
         type: Sequelize.STRING
       },
+      tokensCount: {
+        type: Sequelize.INTEGER
+      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,

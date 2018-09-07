@@ -30,6 +30,67 @@ app.post('/generate_order',function(req,res){
     });
 })
 
+app.post('/payment_hook',async function(req,res){
+    let paymentData = req.body;
+    let transferId = paymentData.transfer;
+    let walletId = paymentData.wallet;
+    let wallet,transfer;
+   await bitgo.coin('tbtc').wallets().get({ id: walletId })
+    .then(function(_wallet) {
+    // print the wallet
+    wallet = _wallet;
+    });
+
+   await wallet.getTransfer({ id: transferId })
+    .then(function(_transfer) {
+    // print the transfer object
+    transfer = _transfer;
+    });
+
+    processTransfer(transfer,res);
+
+    console.log('payment data received:'+JSON.stringify(paymentData));
+    /*
+    console.log('wallet:'+JSON.stringify(wallet._wallet));
+    console.log('transfer:'+JSON.stringify(transfer));*/
+})
+
+async function processTransfer(transfer,res){
+    let userPayment = {
+        description:'some description',
+        satoshi: transfer.valueString,
+        orderId: 1
+    }
+    let address,order;
+    for (let entry of transfer.entries) {
+        //If payment receiver entry
+        if(entry.wallet){
+            address = entry.address;
+            break;
+        }
+    }
+    if(address){
+        console.log('address not null');
+        let orderCriteria = {paymentAddress:address};
+        console.log('orderCriteria:'+JSON.stringify(orderCriteria));
+        await db.UserOrder.findOne({ where: orderCriteria }).then(_order => {
+            console.log('order founded:'+JSON.stringify(_order));
+            order = _order;
+        });
+    }
+    if(order){
+        console.log('order not null');
+        userPayment.orderId = order.id;
+        userPayment.status = transfer.state;
+        db.UserPayment.create(userPayment).then(userPayment=>{
+            res.write(JSON.stringify(userPayment)); 
+            console.log('payment saved');
+        });
+    }
+    console.log('payment not saved');
+    res.write('not saved'); 
+}
+
 app.post('/get_orders',function(req,res) {
     let criteria = req.body;
     db.UserOrder.findOne({ where: criteria }).then(result => {
